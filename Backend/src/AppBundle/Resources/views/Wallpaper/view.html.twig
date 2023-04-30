@@ -1,0 +1,266 @@
+{% extends "AppBundle::layout.html.twig" %}
+{% block body%}
+<div class="container-fluid">
+    <div class="row">
+       <div class="col-sm-offset-1 col-md-10">
+            <div class="card">
+                <div class="card-header card-header-icon" data-background-color="rose">
+                    {% if wallpaper.type =="image" %}
+                        <i class="material-icons">image</i>
+                    {% elseif wallpaper.type =="gif" %}
+                        <i class="material-icons">gif</i>
+                    {% elseif wallpaper.type =="video" %}
+                        <i class="material-icons">videocam</i>
+                    {% endif %}
+                </div>
+                <div class="card-content">
+                    <h4 class="card-title">{{wallpaper.title}}</h4>
+                    <br>
+                    <p >{{wallpaper.description}}</p>
+                    {% if wallpaper.type == "video" %}
+                        <video width="100%" src="{{asset(wallpaper.video.link)}}" controls>
+                            <source id="video_here">
+                            Your browser does not support HTML5 wallpaper.
+                        </video>
+                    {% endif %}
+                    {% if wallpaper.media != null %}
+                    <img src="{{asset(wallpaper.media.link)}}" class="fileinput-preview thumbnail " id="img-preview">
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6">{% if wallpaper.enabled %}
+                        <i class="material-icons" style="color:green;float:left">check_circle</i> <span class="check-label">Enabled</span>
+                        {% else %}
+                        <i class="material-icons" style="color:red;float:left">cancel</i> <span class="check-label">Disabled</span>
+                        {% endif %}</div>
+                    </div>
+                     <div class="row">
+                        <div class="col-md-6">{% if wallpaper.premium %}
+                        <i class="material-icons" style="color:green;float:left">check_circle</i> <span class="check-label">Premuim</span>
+                        {% else %}
+                        <i class="material-icons" style="color:yellow;float:left">cancel</i> <span class="check-label">Free</span>
+                        {% endif %}</div>
+                    </div>
+                     <div class="row">
+                        <div class="col-md-6">{% if wallpaper.comment %}
+                        <i class="material-icons" style="color:green;float:left">check_circle</i> <span class="check-label">Comment Enabled</span>
+                        {% else %}
+                        <i class="material-icons" style="color:red;float:left">cancel</i> <span class="check-label">Comment Disabled</span>
+                        {% endif %}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Categories : </h4>
+                        </div>
+                        <div class="col-md-12" >
+                            {% for category in wallpaper.categories %}
+                                <label   class="color-label" >
+                                      <span class="color-label-checkbox" >x</span ><span class="color-label-text"> {{category.title}}</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Languages : </h4>
+                        </div>
+                        <div class="col-md-12" >
+                            {% for color in wallpaper.colors %}
+                              <label   class="color-label" style="background: #{{color.code}}">
+                                  <span class="color-label-checkbox" style="background: #{{color.code}}">.</span ><span class="color-label-text">{{color.title}}</span>
+                              </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <br>
+
+
+                 </div>
+                <div class="card-footer">
+                    <div class="price">
+                         <div class="wallpaper-logo" style="color:#040303" >
+                        {% if wallpaper.user.image == "" %}
+                            {{wallpaper.user.name}}
+                        {% else %}
+                            <img src="{{wallpaper.user.image}}" class="avatar-img" alt=""> 
+                        {% endif %}
+                         <span>{{wallpaper.user.name}}</span>
+                     </div>
+                    </div>
+                    <div class="stats pull-right">
+                       <div class="wallpaper-logo"  style="color:#040303" >{{wallpaper.created|ago}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+            <div class="col-md-5">
+                    <div class="card" >
+                    <div class="card-content">
+                        <span class="label label-rose col-md-12" style="font-size:13pt;padding:10px;background:#FF5722"> <b>{{wallpaper.viewsnumber}} </b></span>  <br><br>
+                        <span class="label label-rose col-md-12" style="font-size:13pt;padding:10px;background:#FF5722"> <b>{{wallpaper.downloadsnumber}} </b></span>  <br><br>
+                        <span class="label label-rose col-md-12" style="font-size:13pt;padding:10px;background:#FF5722"> <b>{{wallpaper.sharesnumber}} </b></span>  <br><br>
+                        <span class="label label-rose col-md-12" style="font-size:13pt;padding:10px;background:#FF5722"> <b>{{wallpaper.setsnumber}} </b></span>  <br><br>
+                    </div>
+                    </div>
+            </div>
+            <div class="col-md-7">
+                <div class="card" >
+                    <div class="status-bar"></div>
+                    <div class="action-bar">
+                        <a href="#" class="zmdi zmdi-star"></a>
+                    </div>
+                    {% set rate  =  rating %}
+                    {% set rate_main  =  rating %}
+                    <div class="list-group lg-alt lg-even-black">
+                        <br>
+                        <center>
+                        <span style="height: 28px;display: inline-block;font-size: 30pt;font-weight: bold;padding-left: 20px;">Rating : {{rate_main|number_format(1, '.', ',')}}</span>
+                        </center>
+                        <table width="100%" >
+                            <tr>
+                                <td colspan="3" style="padding: 15px;">
+                                    <div style="/* float: left; */display: inline-flex;">
+                                        {% for i in 1..5 %}
+                                            {% if rate >= 1 %}
+                                                <img src="{{asset("img/star.png")}}" style="height:50px;width:50px">
+                                            {% endif %}
+                                            {% if rate >= 0.25 and  rate < 0.75 %}
+                                                <img src="{{asset("img/star_h.png")}}" style="height:50px;width:50px">
+                                            {% endif %}
+                                            {% if rate >= 0.75 and  rate < 1 %}
+                                                <img src="{{asset("img/star.png")}}" style="height:50px;width:50px">
+                                            {% endif %}
+                                            {% if rate < 0.25 %}
+                                                <img src="{{asset("img/star_e.png")}}" style="height:50px;width:50px">
+                                            {% endif %}
+                                            {% set rate  =  rate - 1 %}
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%" align="right" style="padding: 5px;">
+                                    <img src="{{asset("img/star.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star.png")}}" style="height:30px;width:30px">
+                                </td>
+                                <td width="30px" align="center">{{ratings.rate_5}}</td>
+                                <td  align="left" style="padding:10px">
+                                    <span style="display:block;height:15px;background-color:#000000;border-radius:10px;width:{{values.rate_5}}%"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%" align="right" style="padding: 5px;">
+                                    <img src="{{asset("img/star_e.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star.png")}}" style="height:30px;width:30px">
+                                </td>
+                                <td width="30px" align="center">{{ratings.rate_4}}</td>
+                                <td  align="left" style="padding:10px">
+                                    <span style="display:block;height:15px;background-color:#000000;border-radius:10px;width:{{values.rate_4}}%"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%" align="right" style="padding: 5px;">
+                                    <img src="{{asset("img/star_e.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star_e.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star.png")}}" style="height:30px;width:30px">
+                                </td>
+                                <td width="30px" align="center">{{ratings.rate_3}}</td>
+                                <td  align="left" style="padding:10px">
+                                    <span style="display:block;height:15px;background-color:#000000;border-radius:10px;width:{{values.rate_3}}%"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%" align="right" style="padding: 5px;">
+                                    
+                                    <img src="{{asset("img/star_e.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star_e.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star_e.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star.png")}}" style="height:30px;width:30px">
+                                </td>
+                                <td width="30px" align="center">{{ratings.rate_2}}</td>
+                                <td  align="left" style="padding:10px">
+                                    <span style="display:block;height:15px;background-color:#000000;border-radius:10px;width:{{values.rate_2}}%"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%" align="right" style="padding: 5px;">
+                                    <img src="{{asset("img/star_e.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star_e.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star_e.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star_e.png")}}" style="height:30px;width:30px">
+                                    <img src="{{asset("img/star.png")}}" style="height:30px;width:30px">
+                                </td>
+                                <td width="30px" align="center">{{ratings.rate_1}}</td>
+                                <td  align="left" style="padding:10px">
+                                    <span style="display:block;height:15px;background-color:#000000;border-radius:10px;width:{{values.rate_1}}%"></span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="row">
+            {% for comment in wallpaper.comments %}
+                <div class="col-md-6">
+                    <ul class="timeline timeline-simple">
+                        <li class="timeline-inverted">
+                            <div class="timeline-badge danger">
+                                <img src="{{comment.user.image}}" class="img-profile">
+                            </div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <a href="{{path("user_user_edit",{id:comment.user.id})}}" title="">
+                                        <span class="label label-danger">{{comment.user.name}}</span>
+                                    </a>
+                                    <span class="pull-right" >
+                                        <a href="{{path("app_comment_delete",{id:comment.id,"wallpaper":"true"})}}"  rel="tooltip" data-placement="bottom" title="" data-original-title="Delete">
+                                            <i class="material-icons" style="color:red">delete</i>
+                                        </a>
+                                        {% if comment.enabled %}
+                                            <a href="{{path("app_comment_hide",{id:comment.id})}}"  rel="tooltip" data-placement="bottom" title="" data-original-title="Hide">
+                                                 <i class="material-icons">visibility_off</i>
+                                            </a>
+                                        {% else %}                                      
+                                            <a href="{{path("app_comment_hide",{id:comment.id})}}"  rel="tooltip" data-placement="bottom" title="" data-original-title="Show">
+                                                 <i class="material-icons">remove_red_eye</i>
+                                            </a>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>{{comment.contentclear}}</p>
+                                </div>
+                                <small class="pull-right label label-rose">
+                                     <span>{{comment.created|ago}}</span>
+                                </small>
+                            </div>
+                        </li>
+                       
+                    </ul>
+                </div>
+                {% else %}
+                <div class="col-md-12" >
+                    <div class="card"  style="margin-top: 0px;">
+                        <div class="card-content">
+                            <center><img src="{{asset("img/bg_empty.png")}}"  style="width: 100% !important;" =""></center>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock%}

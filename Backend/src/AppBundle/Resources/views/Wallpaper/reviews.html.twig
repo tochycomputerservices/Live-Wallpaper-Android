@@ -1,0 +1,95 @@
+{% extends "AppBundle::layout.html.twig" %}
+{% block body%}
+<div class="container-fluid">
+		<div class="row">
+			<div class="row">
+				<div class="col-md-4" style="padding-right:10px;padding-left:10px;">
+					<a href="{{path("app_wallpaper_reviews")}}" class="btn  btn-lg btn-warning col-md-12"><i class="material-icons" style="font-size: 30px;">refresh</i> Refresh</a>
+				</div>
+				<div class="col-md-4" style="padding-right:10px;padding-left:10px;">
+					<a class="btn btn btn-lg btn-yellow col-md-12"><i class="material-icons" style="font-size: 30px;">wallpaper</i> {{wallpapers_count}} WALL TO REVIEW</a>
+				</div>
+				<div class="col-md-4" style="padding-right:10px;padding-left:10px;">
+					<div class="dropdown">
+						<a href="#" data-toggle="dropdown" aria-expanded="false" class="btn btn-rose btn-lg pull-right add-button col-md-12"title=""><i class="material-icons" style="font-size: 30px;">add_box</i> NEW WALLPAPER </a>
+						<ul class="dropdown-menu dropdown-menu-right" role="menu">
+							<li>
+								<a href="{{path("app_image_add")}}"><i class="material-icons">image</i> UPLOAD WALLPAPER IMAGE</a>
+							</li>
+							<li>
+								<a href="{{path("app_gif_add")}}"><i class="material-icons">gif</i> UPLOAD WALLPAPER GIF</a>
+							</li>
+							<li>
+								<a href="{{path("app_video_add")}}"><i class="material-icons">cloud_upload</i> UPLOAD WALLPAPER VIDEO</a>
+							</li>
+							<li>
+								<a href="{{path("app_video_addurl")}}"><i class="material-icons">link</i> ADD URL WALLPAPER VIDEO </a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+       				{% for wallpaper in wallpapers %}
+					<div class="col-md-4 col-lg-3" style="height:400px;padding-right:10px;padding-left:10px;">
+						<div class="card card-product"  >
+							<img  class="wallpaper-image" src="{{asset(wallpaper.media.link)|imagine_filter("wallpaper_thumb")}}">
+							<div class="wallpaper-title" >
+								{{wallpaper.title}}
+							</div>
+							<div class="card-content" style=" padding: 0px 0px;">
+								<div class="card-actions">
+									<a href="{{path("app_wallpaper_review",{id:wallpaper.id})}}" class="btn btn-info btn-simple btn-sm" rel="tooltip" data-placement="bottom" title="" data-original-title="Review">
+										<i class="material-icons">check</i>
+									</a>
+									<a href="{{path("app_wallpaper_view",{id:wallpaper.id})}}" class="btn btn-info btn-simple btn-sm" rel="tooltip" data-placement="bottom" title="" data-original-title="View">
+										<i class="material-icons">remove_red_eye</i>
+									</a>
+									<a href="{{path("app_wallpaper_delete",{id:wallpaper.id})}}" class="btn btn-danger btn-simple btn-sm" rel="tooltip" data-placement="bottom" title="" data-original-title="Delete">
+										<i class="material-icons">close</i>
+									</a>
+									{% if wallpaper.type =="image" %}
+										<a class="pull-right" style="background-color: #00000000 !important;color:white;"><i class="material-icons">image</i></a>
+									{% elseif wallpaper.type == "gif" %}
+										<a class="pull-right" style="background-color: #00000000 !important;color:white;"><i class="material-icons">gif</i></a>
+									{% else %}	    
+										<a class="pull-right" style="background-color: #00000000 !important;color:white;"><i class="material-icons">videocam</i></a>
+									{% endif %}
+								</div>
+							</div>
+							<div class="card-footer">
+								<div class="price">
+									<div class="wallpaper-logo" >
+										{% if wallpaper.user.image == "" %}
+											{{wallpaper.user.name}}
+										{% else %}
+											<img src="{{wallpaper.user.image}}" class="avatar-img" alt="">
+										{% endif %}
+										<span>{{wallpaper.user.name}}</span>
+									</div>
+								</div>
+								<div class="stats pull-right">
+									<div class="wallpaper-logo" >{{wallpaper.created|ago}}</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% else %}
+					<div class="col-md-12">
+						<div class="card">
+							<div class="card-content">
+								<br>
+								<br>
+								<center><img src="{{asset("img/bg_empty.png")}}"  style="width: auto !important;" =""></center>
+								<br>
+								<br>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+       			</div>
+            <div class=" pull-right">
+        {{ knp_pagination_render(wallpapers) }}
+      </div>
+</div>
+{% endblock%}

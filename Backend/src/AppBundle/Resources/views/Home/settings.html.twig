@@ -1,0 +1,34 @@
+{% extends "AppBundle::layout.html.twig" %}
+{% block body%}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="tab-moivie">
+                        <a href="{{path("app_home_settings")}}" class="btn btn-tab-movie-active col-md-12"><i class="material-icons">settings</i> Settings</a>
+                        <a href="{{path("app_home_ads")}}" class="btn btn-tab-movie col-md-12"><i class="material-icons">monetization_on</i> Ads Settings</a>
+                        <a href="{{path("fos_user_change_password")}}" class="btn btn-tab-movie col-md-12"><i class="material-icons">lock</i> Change password</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header card-header-icon" data-background-color="rose">
+                        <i class="material-icons">settings</i>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">Settings</h4>
+                        {{form_start(form)}}
+                        <div class="form-group label-floating is-empty" style="padding: 0px;margin: 0px;">
+                            <label class="control-label">Firebase sever key</label>
+                            {{form_widget(form.firebasekey,{"attr":{"class":"form-control",'rows':12}})}}
+                            <span class="validate-input">{{form_errors(form.firebasekey)}}</span>
+                        </div>
+                        <span class="pull-right"><a href="{{path("app_home_index")}}" class="btn btn-fill btn-yellow col-md-6"><i class="material-icons">arrow_back</i> Cancel</a>{{form_widget(form.save,{attr:{"class":"btn btn-fill btn-rose"}})}}</span>
+                        {{form_end(form)}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock%}
